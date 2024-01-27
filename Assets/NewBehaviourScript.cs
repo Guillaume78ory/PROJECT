@@ -4,26 +4,22 @@ using UnityEngine;
 
 public class LightSwitch : MonoBehaviour
 {
-    public Light light;
-
-    // Use this for initialization
+    public Light light; 
+    private Color originalColor; 
     void Start()
-    {
-        light = GetComponent<Light>();
+    {light = GetComponent<Light>();
+         originalColor = light.color;
     }
 
-    // Update is called once per frame
+    
     void Update()
-    {
-        if (Input.GetKeyDown("tab"))
-        {
-            // You can insert a new color here. For example, to switch to red:
-            light.color = Color.red;
+    {if (Input.GetKeyDown(KeyCode.Tab))
+        {light.color = Color.green;
+        }
 
-            // If you want to cycle through colors, you could define a list of colors
-            // and select the next one each time the Tab key is pressed.
-            // For example, you could use an array of colors and a variable to keep track of the current index.
-     
+        
+        if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl))
+        {light.color = originalColor;
         }
     }
 }
