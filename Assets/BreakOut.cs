@@ -10,7 +10,7 @@ public class Breakout : MonoBehaviour
     public float m_XPosition;
     void Start()
     {
-        m_NewPosition = new Vector3(30.0f, 0.0f, 0.0f);
+        m_NewPosition = new Vector3(0.0f, 20.0f, -40.0f);
         Zero_Position = transform.position;
     }
     void Update()
