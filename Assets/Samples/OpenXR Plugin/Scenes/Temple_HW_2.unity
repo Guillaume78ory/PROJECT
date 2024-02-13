@@ -1950,7 +1950,7 @@ MonoBehaviour:
   nearObjects: []
   grabbedObject: {fileID: 881504614}
   action: {fileID: -1289947363739713011, guid: e0ca4504471ca124088e1e2cfe6804ae, type: 3}
-  doubleRotation: 1
+  doubleRotation: 0
 --- !u!54 &570625999
 Rigidbody:
   m_ObjectHideFlags: 0
