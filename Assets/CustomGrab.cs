@@ -1,100 +1,4 @@
-
 /*
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.InputSystem;
-
-public class CustomGrab : MonoBehaviour
-{
-    // This script should be attached to both controller objects in the scene
-    // Make sure to define the input in the editor (LeftHand/Grip and RightHand/Grip recommended respectively)
-
-    // Reference to the other hand's CustomGrab script
-    CustomGrab otherHand = null;
-
-    // List of nearby grabbable objects
-    public List<Transform> nearObjects = new List<Transform>();
-
-    // Reference to the currently grabbed object
-    public Transform grabbedObject = null;
-
-    // Reference to the input action
-    public InputActionReference action;
-
-    // Flag to check if the grip button is being pressed
-    bool grabbing = false;
-
-    // Variables to store the previous position and rotation
-    Vector3 previousPosition;
-    Quaternion previousRotation;
-
-    private void Start()
-    {
-        // Enable the input action
-        action.action.Enable();
-
-        // Find the other hand
-        foreach (CustomGrab c in transform.parent.GetComponentsInChildren<CustomGrab>())
-        {
-            if (c != this)
-                otherHand = c;
-        }
-    }
-
-    void Update()
-    {
-        // Check if the grip button is being pressed
-        grabbing = action.action.IsPressed();
-
-        if (grabbing)
-        {
-            // Grab nearby object or the object in the other hand
-            if (!grabbedObject)
-                grabbedObject = nearObjects.Count > 0 ? nearObjects[0] : otherHand.grabbedObject;
-
-            if (grabbedObject)
-            {
-                // Add the delta position and rotation instead
-                Vector3 deltaPosition = transform.position - previousPosition;
-                Quaternion deltaRotation = transform.rotation * Quaternion.Inverse(previousRotation);
-
-                // Apply the delta position and rotation to the grabbed object
-                grabbedObject.position += deltaPosition;
-                grabbedObject.rotation *= deltaRotation;
-            }
-        }
-        // If let go of button, release object
-        else if (grabbedObject)
-            grabbedObject = null;
-
-        // Save the current position and rotation for the next frame
-        previousPosition = transform.position;
-        previousRotation = transform.rotation;
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        // Make sure to tag grabbable objects with the "grabbable" tag
-        // You also need to make sure to have colliders for the grabbable objects and the controllers
-        // Make sure to set the controller colliders as triggers or they will get misplaced
-        // You also need to add Rigidbody to the controllers for these functions to be triggered
-        // Make sure gravity is disabled though, or your controllers will (virtually) fall to the ground
-
-        Transform t = other.transform;
-        if (t && t.tag.ToLower() == "grabbable")
-            nearObjects.Add(t);
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        Transform t = other.transform;
-        if (t && t.tag.ToLower() == "grabbable")
-            nearObjects.Remove(t);
-    }
-}
-*/
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -164,7 +68,107 @@ public class CustomGrab : MonoBehaviour
             nearObjects.Remove(t);
     }
 }
+*/
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
+public class CustomGrab : MonoBehaviour
+{
+    public CustomGrab otherHand = null;
+    public List<Transform> nearObjects = new List<Transform>();
+    public Transform grabbedObject = null;
+    public InputActionReference action;
+    private bool grabbing = false;
+    private Vector3 lastPosition;
+    private Quaternion lastRotation;
+    public bool doubleRotation = false; 
+
+    private void Start()
+    {
+        action.action.Enable();
+
+        // Find the other hand
+        foreach (CustomGrab c in transform.parent.GetComponentsInChildren<CustomGrab>())
+        {
+            if (c != this)
+                otherHand = c;
+        }
+        lastPosition = transform.position;
+        lastRotation = transform.rotation;
+    }
+
+    void Update()
+    {
+        grabbing = action.action.IsPressed();
+
+        Vector3 deltaPosition = transform.position - lastPosition;
+        Quaternion deltaRotation = transform.rotation * Quaternion.Inverse(lastRotation);
+
+        if (grabbing)
+        {
+            if (!grabbedObject)
+            {
+                grabbedObject = nearObjects.Count > 0 ? nearObjects[0] : otherHand.grabbedObject;
+            }
+
+            if (grabbedObject)
+            {
+                ApplyCombinedManipulation(deltaPosition, deltaRotation);
+            }
+        }
+        else if (grabbedObject)
+        {
+            grabbedObject = null;
+        }
+
+        lastPosition = transform.position;
+        lastRotation = transform.rotation;
+    }
+
+    private void ApplyCombinedManipulation(Vector3 deltaPosition, Quaternion deltaRotation)
+    {
+        if (otherHand != null && otherHand.grabbing && otherHand.grabbedObject == grabbedObject)
+        {
+            Vector3 combinedDeltaPosition = deltaPosition + (otherHand.transform.position - otherHand.lastPosition);
+
+            Quaternion combinedDeltaRotation = deltaRotation * Quaternion.Inverse(otherHand.lastRotation) * otherHand.transform.rotation;
+
+            if (doubleRotation)
+            {
+                combinedDeltaRotation *= Quaternion.Slerp(Quaternion.identity, combinedDeltaRotation, 2.0f - 1.0f); // Double the rotation magnitude
+            }
+
+            grabbedObject.position += combinedDeltaPosition;
+            grabbedObject.rotation = combinedDeltaRotation * grabbedObject.rotation;
+        }
+        else
+        {
+            if (doubleRotation)
+            {
+                deltaRotation *= Quaternion.Slerp(Quaternion.identity, deltaRotation, 2.0f - 1.0f); // Double the rotation magnitude
+            }
+
+            grabbedObject.position += deltaPosition;
+            grabbedObject.rotation = deltaRotation * grabbedObject.rotation;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Transform t = other.transform;
+        if(t && t.CompareTag("Grabbable"))
+            nearObjects.Add(t);
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        Transform t = other.transform;
+        if(t && t.CompareTag("Grabbable"))
+            nearObjects.Remove(t);
+    }
+}
 
 
 

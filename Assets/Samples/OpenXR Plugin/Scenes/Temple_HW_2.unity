@@ -1092,7 +1092,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 0.049999997, y: 0.049999997, z: 10.05}
   m_Center: {x: -35.2, y: -21.2, z: 72.431885}
@@ -1103,11 +1103,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 255551316}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bf814b1daf07c6a488848ecfd4cf0e5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  otherHand: {fileID: 0}
   nearObjects: []
   grabbedObject: {fileID: 881504614}
   action: {fileID: -5194266436686895582, guid: e0ca4504471ca124088e1e2cfe6804ae, type: 3}
@@ -1572,6 +1573,8 @@ GameObject:
   - component: {fileID: 495947634}
   - component: {fileID: 495947633}
   - component: {fileID: 495947637}
+  - component: {fileID: 495947638}
+  - component: {fileID: 495947639}
   m_Layer: 6
   m_Name: Camera
   m_TagString: Untagged
@@ -1587,13 +1590,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 495947631}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.004218365, y: -0.00087267905, z: -0.0000036827116, w: 0.9999907}
+  m_LocalRotation: {x: 0.000048995495, y: -0.0008726864, z: 0.000000036526327, w: 0.99999964}
   m_LocalPosition: {x: 0.019999843, y: -0.45000076, z: -0.22000243}
   m_LocalScale: {x: 10, y: 10, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1640746383}
-  m_LocalEulerAnglesHint: {x: -0.483, y: -0.1, z: 0}
+  m_LocalEulerAnglesHint: {x: 0.006, y: -0.1, z: 0}
 --- !u!114 &495947633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1606,9 +1609,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e562f03c6adce104eb15432a7f27b79e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vrCamera: {fileID: 0}
-  magnifierCamera: {fileID: 0}
-  zoomFactor: 2
+  MainCamera: {fileID: 0}
+  MagnifierCamera: {fileID: 0}
+  zoomFactor: 3
   magnifierActive: 1
 --- !u!114 &495947634
 MonoBehaviour:
@@ -1720,13 +1723,43 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 495947631}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1796fcd22e1d0a347b499db016c4c2cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   playerTarget: {fileID: 1457993082}
   mirror: {fileID: 881504614}
+--- !u!114 &495947638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 495947631}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc4d1d313ba22404ba88aa289be862e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  magnifyingMaterial: {fileID: 0}
+  magnifyingCenter: {fileID: 0}
+  magnifyAmount: 3
+--- !u!114 &495947639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 495947631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2bb8e11382528d4fb316a581cd424a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loupeCamera: {fileID: 495947636}
+  zoomFactor: 2
+  zoomSpeed: 10
 --- !u!1001 &533011559
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1913,10 +1946,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf814b1daf07c6a488848ecfd4cf0e5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  otherHand: {fileID: 0}
   nearObjects: []
   grabbedObject: {fileID: 881504614}
   action: {fileID: -1289947363739713011, guid: e0ca4504471ca124088e1e2cfe6804ae, type: 3}
-  doubleRotation: 0
+  doubleRotation: 1
 --- !u!54 &570625999
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2755,7 +2789,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 0.049999997, y: 0.049999997, z: 10.05}
   m_Center: {x: -9, y: -21.2, z: 72.431885}
@@ -2766,11 +2800,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 591412071}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bf814b1daf07c6a488848ecfd4cf0e5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  otherHand: {fileID: 0}
   nearObjects: []
   grabbedObject: {fileID: 881504614}
   action: {fileID: -1289947363739713011, guid: e0ca4504471ca124088e1e2cfe6804ae, type: 3}
@@ -3916,6 +3951,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf814b1daf07c6a488848ecfd4cf0e5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  otherHand: {fileID: 0}
   nearObjects: []
   grabbedObject: {fileID: 881504614}
   action: {fileID: -5194266436686895582, guid: e0ca4504471ca124088e1e2cfe6804ae, type: 3}

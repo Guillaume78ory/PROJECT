@@ -4,7 +4,7 @@ public class MagnifyingGlass : MonoBehaviour
 {
     public Material magnifyingMaterial;
     public Transform magnifyingCenter;
-    public float magnifyAmount = 1.0f;
+    public float magnifyAmount = 3.0f;
 
     void Update()
     {
